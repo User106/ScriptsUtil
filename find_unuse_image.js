@@ -10,6 +10,12 @@ let allUsedImagesSet = new Set()
 var readdir = promisify(fs.readdir);
 var stat = promisify(fs.stat);
 
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 function promisify(fn) {
     return function() {
         var args = arguments;
@@ -120,7 +126,8 @@ function dealFile(filename,fullPath,stats,callback) {
     if (contantImage(fullPath)) {
         allImages.push({
             path: fullPath,
-            size: calculateSize(stats.size)
+            size: calculateSize(stats.size),
+            byteSize: stats.size
         })
         callback(filename, fullPath);
     } else if (fullPath.endsWith('.js')) {
@@ -164,6 +171,24 @@ readDirRecur(imgFilePath, function(item, fullPath) {
             console.log('使用的图片资源数量：' + allUsedImages.length)
             console.log('未使用的图片资源数量：' + unUsedImages.length)
             console.log('done');
+            rl.question(`是否删除未使用的图片(yes/no)？`, (commands) => {
+                if (commands == 'yes') {
+                    let delectSize = 0;
+                    let delectCount = 0;
+                    unUsedImages.forEach((info)=>{
+                        if (info.path) {
+                            console.log('删除 '+info.path);
+                            fs.unlinkSync(info.path)
+                            delectSize += info.byteSize;
+                            delectCount++;
+                        }
+                    })
+                    console.log('共删除了'+ delectCount +'个文件，总共节省了'+calculateSize(delectSize))
+                } else if (commands != 'no') {
+                    console.log(commands +'是无效指令')
+                }
+                rl.close();
+            });
         }).catch(function(err) {
             console.log(err);
         });

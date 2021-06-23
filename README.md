@@ -16,16 +16,22 @@ $ node find_unuse_image.js
 
 {
   path: '/Users/CC/Git/rn-app/img/icon_home@2x.png',
-  size: '2KB'
+  size: '2KB',
+  byteSize: 1677
 }
 {
   path: '/Users/CC/Git/rn-app/ReactNative/Image/icon_cat.png',
-  size: '16KB'
+  size: '16KB',
+  byteSize: 16304
 }
-所有的图片资源数量：1068
+...
+所有的图片资源数量：1024
 使用的图片资源数量：725
 未使用的图片资源数量：101
-done
+是否删除未使用的图片(yes/no)？yes
+删除 /Users/yfw/Git/rn-app/img/icon_home@2x.png
+....
+共删除了101个文件，总共节省了4M
 ```
 
 
